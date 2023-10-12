@@ -8,7 +8,7 @@ def get_user_input():
 
 
 def get_bot_response(user_input):
-    print("[blue]G4F: ", end='')
+    print("[magenta]G4F: ", end='')
     response = g4f.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": user_input}],
