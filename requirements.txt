@@ -1,4 +1,4 @@
 g4f~=0.1.5.9
 rich~=13.6.0
 ping3~=4.0.4
-speedtest-cli~=2.1.4
+speedtest-cli~=2.1.4b1
