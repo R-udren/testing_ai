@@ -2,7 +2,6 @@ import speedtest
 from ping3 import ping
 from rich.console import Console
 from rich import print
-import time
 
 
 # Function to check ping
@@ -26,18 +25,17 @@ def check_speed():
             f'[magenta]Upload speed: {upload_speed:.2f} Mbps[/magenta]')
 
 
-def animated_print(text):
-    text += '\n'
-    for char in text:
-        print(char, end='')
-        time.sleep(0.01)
+def main():
+    host_to_ping = "google.com"
+    console = Console()
+
+    with console.status("[bold green]Checking internet speed...\n") as status:
+        speed_result = check_speed()
+        ping_result = check_ping(host_to_ping)
+        status.stop()
+        print(ping_result)
+        print(speed_result)
 
 
 if __name__ == "__main__":
-    host_to_ping = "www.google.com"  # Change this to the host you want to ping
-    ping_result = check_ping(host_to_ping)
-    speed_result = check_speed()
-
-    console = Console()
-    print(ping_result)
-    print(speed_result)
+    main()
