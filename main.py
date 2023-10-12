@@ -1,6 +1,7 @@
 import g4f
 from rich.prompt import Prompt
 from rich import print
+from rich.console import Console
 
 
 def get_user_input():
@@ -20,6 +21,7 @@ def get_bot_response(user_input):
 
 
 def main():
+    console = Console()
     try:
         print("[green]Type your message below. Press Ctrl+C to exit.[/green]", end='')
         while True:
@@ -27,6 +29,8 @@ def main():
             get_bot_response(user_input)
     except KeyboardInterrupt:
         print("\n[red]Exiting...[/red]")
+    except:
+        console.print_exception()
 
 
 if __name__ == "__main__":
