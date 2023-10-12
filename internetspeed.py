@@ -36,22 +36,23 @@ def check_speed():
 
 def main():
     host_to_ping = "google.com"
-    console = Console()
+    console = Console(style="bold cyan")
 
-    with console.status("[bold green]Checking internet speed...\n") as status:
+    with console.status("[bold green]Checking internet speed...\n", spinner='bouncingBall') as status:
         try:
             download_speed, upload_speed = check_speed()
             ping_result = check_ping(host_to_ping)
         except:
-            console.print_exception()
+            console.print_exception(extra_lines=2)
             return
+
         finally:
             status.stop()
         print(ping_result)
         print(download_speed)
         print(upload_speed)
+    console.input("\n[bold yellow]Press Enter to exit...[/bold yellow]")
 
 
 if __name__ == "__main__":
     main()
-    input('Press Enter to exit program...')
