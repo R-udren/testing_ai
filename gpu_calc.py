@@ -1,3 +1,4 @@
+from gpus import card_1080p, card_1440p, card_2160p
 from rich.console import Console
 from rich.table import Table
 from rich.prompt import Prompt
@@ -6,25 +7,21 @@ console = Console()
 
 
 def get_resolution():
-    console.print("[bold cyan]Выбери разрешение:")
     selected_resolution = Prompt.ask(
         "[green_yellow]1. 1080p\n"
         "2. 1440p\n"
-        "3. 2160p\n[/green_yellow]",
-        choices=['1', '2', '3']
+        "3. 2160p\n[/green_yellow][bold cyan]Выбери разрешение",
+        choices=['1', '2', '3'], default='1', show_choices=False, show_default=False
     )
 
     match selected_resolution:
         case '2':
-            from gpus import card_1440p
             data_str = card_1440p
             selected_resolution = 'QuadHD - 1440p (2K QHD)'
         case '3':
-            from gpus import card_2160p
             data_str = card_2160p
             selected_resolution = 'UltraHD - 2160p (4K UHD)'
         case _:
-            from gpus import card_1080p
             data_str = card_1080p
             selected_resolution = 'FullHD - 1080p (FHD)'
     return data_str, selected_resolution
@@ -43,8 +40,8 @@ def create_table(cards_data):
     card_table = Table(title="Выбери видеокарту", show_header=True, header_style="bold cyan")
 
     # Добавление заголовков
-    card_table.add_column("No.", style="cyan")
-    card_table.add_column("Graphics Card", style="magenta")
+    card_table.add_column("№", style="cyan")
+    card_table.add_column("GPU", style="magenta")
     card_table.add_column("FPS", style="green")
 
     # Добавление данных в таблицу
@@ -57,8 +54,8 @@ def get_price_per_fps(cards_data, table):
     gpu_names = list(cards_data.keys())
     selected_gpus = {}
 
+    console.print(table)
     while True:
-        console.print(table)
         index = Prompt.ask(
             "[cyan1]Выбери порядковый номер видеокарты [/cyan1][red](0 для выхода)[/red]",
             default='0',
@@ -79,12 +76,15 @@ def get_price_per_fps(cards_data, table):
             gpu = gpu_names[index - 1]
             try:
                 price = float(Prompt.ask(
-                    f"[magenta]Введи цену для [bold]{gpu}[/bold]",
+                    f"[magenta]Введи цену для [bold]{gpu}[/bold] (0 для пропуска):",
                     default='0',
                     show_default=False
                 ))
 
-                if price <= 0:
+                if price == 0:
+                    console.print(f"Пропускаем {gpu}. Введено 0 для цены.")
+                    continue
+                elif price < 0:
                     raise ValueError("Цена должна быть положительной.")
 
                 price_per_fps = round(price / cards_data[gpu], 2)
@@ -122,14 +122,14 @@ def most_profitable(selected_cards, selected_resolution):
     console.print("\n" * 2 + f"[green1]Разрешение [bold green]{selected_resolution}[/bold green].")
     console.print("[bold yellow]Самая выгодная видеокарта - первая в списке")
 
-    table = Table(header_style="bold magenta1", show_header=True)
+    table = Table(header_style="bold magenta", show_header=True)
 
     # Добавление заголовков
     table.add_column("№", style="cyan")
-    table.add_column("GPU", style="magenta")
+    table.add_column("GPU", style="magenta1")
     table.add_column("FPS", style="green")
     table.add_column("Цена", style="cyan")
-    table.add_column("Цена за FPS", style="magenta")
+    table.add_column("Цена за FPS", style="magenta2")
 
     # Добавление данных в таблицу
     selected_cards = dict(sorted(selected_cards.items(), key=lambda item: item[1]['Price per FPS']))
@@ -149,6 +149,8 @@ def most_profitable(selected_cards, selected_resolution):
 
 
 def main():
+    console.print("[bold green]Добро пожаловать в программу по выбору видеокарт![/bold green]")
+    console.print("[bold green]=================================================[/bold green]")
     try:
         data_string, resolution = get_resolution()
         data = convert_data(data_string)
@@ -156,9 +158,10 @@ def main():
         selected = get_price_per_fps(data, created_table)
         most_profitable(selected, resolution)
     except KeyboardInterrupt:
-        console.print("\n[red]Программа прервана пользователем![/red]")
-    except:
+        console.print("\n[red]Программа завершена пользователем.[/red]")
+    except Exception as e:
         console.print_exception(extra_lines=2)
+        console.print(f"[red]Произошла ошибка: {e}[/red]")
 
 
 if __name__ == "__main__":
