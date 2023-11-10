@@ -1,3 +1,5 @@
+import os
+
 import g4f
 from rich.prompt import Prompt
 from rich import print
@@ -24,7 +26,7 @@ def main():
     console = Console()
     try:
         print("[green]Type your message below. Press Ctrl+C to exit.[/green]", end='')
-        messages = []
+        messages = [{"role": "user", "content": os.getlogin()}]
         while True:
             messages.append({"role": "user", "content": get_user_input()})
             messages.append({"role": "bot", "content": get_bot_response(messages)})
