@@ -8,11 +8,11 @@ def get_user_input():
     return Prompt.ask("\n[yellow]You[/yellow]")
 
 
-def get_bot_response(user_input):
+def get_bot_response(messages):
     print("[magenta]G4F: ", end='')
     response = g4f.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": user_input}],
+        messages=messages,
         stream=True,
     )
 
@@ -24,9 +24,10 @@ def main():
     console = Console()
     try:
         print("[green]Type your message below. Press Ctrl+C to exit.[/green]", end='')
+        messages = []
         while True:
-            user_input = get_user_input()
-            get_bot_response(user_input)
+            messages.append({"role": "user", "content": get_user_input()})
+            messages.append({"role": "bot", "content": get_bot_response(messages)})
     except KeyboardInterrupt:
         print("\n[red]Exiting...[/red]")
     except:
