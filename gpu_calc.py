@@ -76,7 +76,7 @@ def get_price_per_fps(cards_data, table):
             gpu = gpu_names[index - 1]
             try:
                 price = float(Prompt.ask(
-                    f"[magenta]Введи цену для [bold]{gpu}[/bold] (0 для пропуска):",
+                    f"[magenta]Введи цену для [bold]{gpu}[/bold] (0 для пропуска)",
                     default='0',
                     show_default=False
                 ))

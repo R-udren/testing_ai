@@ -4,13 +4,13 @@ from rich.console import Console
 from rich import print
 
 
-def format_bytes(raw_bytes):
-    units = ['bytes', 'Kb', 'Mb', 'Gb', 'Tb']
+def format_bits(raw_bits):
+    units = ['b', 'Kb', 'Mb', 'Gb', 'Tb']
     i = 0
-    while raw_bytes >= 1024:
-        raw_bytes /= 1024
+    while raw_bits >= 1024:
+        raw_bits /= 1024
         i += 1
-    return f'{raw_bytes:.2f} {units[i]}'
+    return f'{raw_bits:.2f} {units[i]}'
 
 
 # Function to check ping
@@ -27,8 +27,8 @@ def check_speed():
     st = speedtest.Speedtest()
     st.get_best_server()  # Find the best server
 
-    download_speed = format_bytes(st.download())
-    upload_speed = format_bytes(st.upload())
+    download_speed = format_bits(st.download())
+    upload_speed = format_bits(st.upload())
 
     return (f'[blue]Download speed: {download_speed}ps[/blue]',
             f'[magenta]Upload speed: {upload_speed}ps[/magenta]')
